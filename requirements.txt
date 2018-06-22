@@ -4,7 +4,7 @@
 
 aio-pika==2.9.0
 aioredis == 1.1.0
-mypy == 0.590
+mypy==0.610
 redis = 2.10.6
 pytest
 fakeredis == 0.10.2
