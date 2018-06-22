@@ -1,0 +1,12 @@
+# A requirements file for my playing with pyup
+# This is created by hand, and not necessarily useful(!)
+# I haven't specified all the sub-dependencies...
+
+aio-pika == 2.6.0
+aioredis == 1.1.0
+mypy == 0.590
+redis = 2.10.6
+pytest
+fakeredis == 0.10.2
+pytest-asyncio
+freezegun
