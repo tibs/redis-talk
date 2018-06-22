@@ -3,7 +3,7 @@
 # I haven't specified all the sub-dependencies...
 
 aio-pika==2.9.0
-aioredis == 1.0.0
+aioredis==1.1.0
 mypy==0.610
 redis = 2.10.6
 pytest==3.6.2
