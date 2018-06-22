@@ -113,15 +113,16 @@ very simple to convert code.
   import asyncio
   import aioredis
   import redis
+  from asyncio.selector_events import BaseSelectorEventLoop
   from datetime import datetime
   
-  def add_something_to_set(redis, loop):
+  def add_something_to_set(redis: aioredis.Redis, loop: BaseSelectorEventLoop):
       """Add an entry to the demoSet."""
       # ... do stuff, adding `await` as appropriate
       now = datetime.utcnow()
       await redis.zadd('demoSet', now.timestamp(), b'Something')
 
-  def redis_stuff(loop):
+  def redis_stuff(loop: BaseSelectorEventLoop):
       """Do something with Redis."""
       redis = await aioredis.create_redis(REDIS_URL, loop=loop)
 
@@ -209,7 +210,7 @@ We already use:
   from demo import add_something_to_set
 
   @pytest.mark.asyncio
-  async def test_adding_an_item(event_loop):
+  async def test_adding_an_item(event_loop: BaseSelectorEventLoop):
       """A single item gets added to demoSet."""
       redis = fakeredis.FakeStrictRedis(singleton=False)
       aredis = JustEnoughAsyncRedis(redis)
@@ -245,6 +246,13 @@ Random links
     asyncio in Python 3 - Robert Smallshire) that we highly recommend.
 
 * REDIS
+
+  - https://pypi.org/project/redis/
+  - https://redis.io/topics/quickstart
+  - https://redis.io/commands
+  - https://redis.io/topics/data-types-intro
+
+  https://redis.io/topics/ARM - Redis is supported on Raspberry Pi from 4.0
 
   - https://github.com/aio-libs/aioredis and http://aioredis.readthedocs.io/en/v1.1.0/
   - http://aioredis.readthedocs.io/en/v1.1.0/
