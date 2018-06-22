@@ -3,7 +3,7 @@
 # I haven't specified all the sub-dependencies...
 
 aio-pika==2.9.0
-### aioredis == 1.1.0
+aioredis == 1.10.0
 mypy==0.610
 redis = 2.10.6
 pytest==3.6.2
@@ -11,6 +11,3 @@ fakeredis==0.11.0
 pytest-asyncio==0.8.0
 freezegun==0.3.10
 docutils==0.14
-
-# What if we refer to a specific repository?
-git://github.com/aio-libs/aioredis@#egg=aioredis
