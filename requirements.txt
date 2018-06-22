@@ -9,4 +9,4 @@ redis = 2.10.6
 pytest==3.6.2
 fakeredis==0.11.0
 pytest-asyncio==0.8.0
-freezegun
+freezegun==0.3.10
