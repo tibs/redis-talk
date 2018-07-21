@@ -6,6 +6,25 @@ I've said I want to mention async support for using Redis at the end, but
 should I just say "well, it's easy enough, so I'm just going to be async all
 the way through"? I think not, but bear it in mind.
 
+Why?
+===
+Persistences. This comes up every so often - I want a way to persist Python
+data that is very easy (no encoding/decoding), and perhaps isn't either local
+or simple files. This is of course a special case of *sharing data between
+instances*, it's just the instances are separated in time.
+
+Sharing data between "instances" - by which I mean different threads, async
+processes, processes on the same machine, or even distributed processes. One
+very simple mechanism for all of those is useful.
+
+As a bonus, being programming and operating system agnostic seems a good
+thing.
+
+But it's also
+=============
+Yes, I know it's a NOSQL database, but that's not really the point of my
+interest - it's how I can use it.
+
 Installing and running Redis
 ============================
 
@@ -50,6 +69,8 @@ On the whole, the available commands appear to be very well designed.
 
 ...my favourite command, BRPOPLPUSH - it's atomic!
 
+It feels a bit like having an assembly language?
+
 Documentation
 =============
 In general, the Redis documentation is excellent.
@@ -69,6 +90,12 @@ How some Redis concepts relate to Python concepts
 It's very natural to use Redis as a persistent back end for what would
 otherwise be local Python values.
 
+Other good things
+=================
+Ordered sets, where the ordering is via an integer. Which can be a timestamp,
+and one can select on the range of the integers, so its easy to discard values
+that are "too old"
+
 
 Some weirdnesses (from the Python view)
 =======================================
@@ -77,6 +104,14 @@ sufficiently common that it's in all the documentation.
 
 Everything is a bytestring, but one can ``INC`` a number.
 
+Namespacing
+===========
+See the above, in "weirdnesses"
+
+Remember that a top-level key can reference a value that is itself a
+dictionary, so that can be useful as well. That is, if you know you want a
+dictionary, don't just store its keys at the top-level - store them in a
+particular top-level key. This isn't as obvious as you'd think.
 
 Python clients
 ==============
