@@ -1,0 +1,83 @@
+============
+Random notes
+============
+
+Proposal
+========
+
+**[9DFE] Redis: persistent collections as a service (and for fun): A quick
+introduction to Redis, and why I really like it**
+
+Talk: 25 minutes
+
+Accepted (by PyConUK) and confirmed (by me)
+
+What is your session about?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I recently had to learn about Redis for work, and was very pleased at how well
+designed it is, and how much fun it is to use. Several times I went to look
+for a piece of functionality, and there it was, doing exactly what I wanted. I
+am especially fond of BRPOPLPUSH.
+
+I propose to give a brief introduction to what Redis is and does, an overview
+of the redis-py client and fakeredis for unit testing, and if there's time,
+some discussion of asyncio programming using aioredis.
+
+At the end, I hope that the audience will know a bit about a genuinely useful
+tool that can be used as a datestore, and also for cross-communication between
+many programming languages. And maybe they'll share some of my enthusiasm.
+
+Is there anything else we should know about your proposal?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+I'd expect to want to alter the summary text as the talk actually takes shape,
+but the basic intent is to share the fun and joy of discovering a new tool
+that strikes me as rather well-designed. It's prettier than a swiss-army
+chainsaw, but just about as tempting to use.
+
+I havn't written this talk yet, but will be doing so anyway over the next
+month (i.e., May/June), whether it's accepted for PyCon UK or not (and will
+doubtless give the talk at work and at CamPUG). As normal the slides, their
+sources, and background notes will go up on github, probably under a CC
+license.
+
+What I'm *not* wanting to do is consider Redis as an alternative to a
+traditional database - I think it's more interesting as a way of getting
+persistent collections and easy inter-processor/process/thread/task/etc.
+communication.
+
+I will use pytest in any unit testing. If I mention virtual environments, I
+will use pipenv.
+
+I *think* it's a topic of relevance to everyone, and apart from any discussion
+of asyncio, shouldn't require any very complicated or sophisticated knowledge
+(it would help to have knowledge of the standard Python collections, up to and
+including queues, and perhaps also semaphores, but that's as far as it goes).
+Can you give us an outline of your proposed session?
+
+Broadly: what Redis is, and why it might be useful; the fact it has clients in
+many programming languages, and a rather good CLI tool; what datatypes it
+provides, and how they relate to Python concepts; that it is instruction
+based; how to use the Redis documentation (which is where being instruction
+based helps, as one documentation can serve all); how I wanted BRPOPLPUSH, and
+was very pleased to discover that (a) it existed, (b) it was atomic, and (c)
+that it gives back the data item that it is rotating [if that doesn't make
+sense, then I'll be explaining it in the talk!] - this is part of my
+assessment that the service is well designed; that several Python clients
+exist, but we use redis-py, and how easy it is to use, and also to unit-test
+with fakeredis (I consider it very important to show that unit testing is
+possible and easy, because we're all used to the hassle of unit testing things
+as seemingly simple as Requests).
+
+That's going to be challenging to get into 25 minutes, so there will doubtless
+be compromises.
+
+If I had a longer slot, I'd expand all of those a bit, and also address
+asyncio support, and how simple it is to use aioredis, and unit test it with a
+simple wrapper around fakeredis. In a longer slot, I might also mention the
+ability to use Lua for special cases, and how that is supported, and maybe
+briefly mention transactions. The notes will also probably have some
+historical background as well.
+
+.. vim: set filetype=rst tabstop=8 softtabstop=2 shiftwidth=2 expandtab:
