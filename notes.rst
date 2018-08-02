@@ -341,90 +341,90 @@ https://redis.io/topics/indexes -- recommendations on secondary indexes.
 
 https://redis.io/topics/data-types-intro
 
-  * https://redis.io/topics/data-types is shorter and less complete
+* https://redis.io/topics/data-types is shorter and less complete
 
-  * """Redis is not a *plain* key-value store, it is actually a *data structures
-    server*, supporting different kinds of values."""
+* """Redis is not a *plain* key-value store, it is actually a *data structures
+  server*, supporting different kinds of values."""
 
-    * binary-safe strings
-    * lists (linked lists, so sorted by insertion order)
-    * sets (unique, unsorted string elements)
-    * sorted sets (every string is associated with a floating number value, its
-      score. Score ranges can be used for retrieval of elements)
-    * Hashes (dictionaries of fields -> values, both of which are strings)
-    * Bit arrays (bitmaps) - stored as strings
-    * Hyperloglogs (a probabalistic data structure, used in order to estimate a
-      cardinality(!))
+  * binary-safe strings
+  * lists (linked lists, so sorted by insertion order)
+  * sets (unique, unsorted string elements)
+  * sorted sets (every string is associated with a floating number value, its
+    score. Score ranges can be used for retrieval of elements)
+  * Hashes (dictionaries of fields -> values, both of which are strings)
+  * Bit arrays (bitmaps) - stored as strings
+  * Hyperloglogs (a probabalistic data structure, used in order to estimate a
+    cardinality(!))
 
-    NB: Whenever Redis says "string", a Python programmer should hear "bytes" -
-    i.e., ``b"string"``.
+  NB: Whenever Redis says "string", a Python programmer should hear "bytes" -
+  i.e., ``b"string"``.
 
-  * Keys may be any binary sequence.
-   
-    * The empty string is valid.
-    * Very long (e.g., 1024 bytes) probably not a good idea. The maximum size is
-      512MB.
-    * But don't try to shorten artificially - still use well-named keys.
-    * Try to name in a predictable manner. They use ``:`` as a "scoping"
-      delimiter in key names.
+* Keys may be any binary sequence.
+ 
+  * The empty string is valid.
+  * Very long (e.g., 1024 bytes) probably not a good idea. The maximum size is
+    512MB.
+  * But don't try to shorten artificially - still use well-named keys.
+  * Try to name in a predictable manner. They use ``:`` as a "scoping"
+    delimiter in key names.
 
-  * String values:
+* String values:
 
-    * Maximum size 512MB
-    * SET can be asked to fail if key already exists, or fail if key does not
-      already exist
-    * String values can be atomically incremented and decremented - i.e.,
-      treated as integers
+  * Maximum size 512MB
+  * SET can be asked to fail if key already exists, or fail if key does not
+    already exist
+  * String values can be atomically incremented and decremented - i.e.,
+    treated as integers
 
-      * *atomic* - multiple clients won't be able to see "inside" the operation
-        of the command - they'll see before and after, and can't interfere with
-        it.
+    * *atomic* - multiple clients won't be able to see "inside" the operation
+      of the command - they'll see before and after, and can't interfere with
+      it.
 
-  * EXISTS and DEL (does key exist, delete key (and say if it existed or not))
+* EXISTS and DEL (does key exist, delete key (and say if it existed or not))
 
-  * TYPE to tell datatype of the value stored at a given key
+* TYPE to tell datatype of the value stored at a given key
 
-  * All keys can be given a timeout
+* All keys can be given a timeout
 
-  * Lists: LPUSH and RPUSH, either can take more than one item
+* Lists: LPUSH and RPUSH, either can take more than one item
 
-    - This is a nice example of how commands can have a prefix to indicate how
-      they differ in their details, or what datastype they apply to
+  - This is a nice example of how commands can have a prefix to indicate how
+    they differ in their details, or what datastype they apply to
 
-    and of course RPOP and LPOP
+  and of course RPOP and LPOP
 
-  * LTRIM to "trim" a list to the given range
+* LTRIM to "trim" a list to the given range
 
-  * "-1" in a range means "the last element" - familiar to Python programmers.
+* "-1" in a range means "the last element" - familiar to Python programmers.
 
-  * Blocking list operations, BRPOP and BLPOP, which will block until there is
-    something the list to be popped. A timeout can be specified, and can wait on
-    more than one list (so it returns a pair of "key, value" so you can tell
-    which list satisfied the request).
+* Blocking list operations, BRPOP and BLPOP, which will block until there is
+  something the list to be popped. A timeout can be specified, and can wait on
+  more than one list (so it returns a pair of "key, value" so you can tell
+  which list satisfied the request).
 
-  * And thus the wonderful RPOPLPUSH and BRPOPLPUSH
+* And thus the wonderful RPOPLPUSH and BRPOPLPUSH
 
-  * Setting a key will create the key if necessary. Similarly, if a key has (no
-    more) value, it will be deleted. Asking for the length of a key which has no
-    value will act as if the key had an aggregate value of length 0, or whatever
-    other type is appropriate.
+* Setting a key will create the key if necessary. Similarly, if a key has (no
+  more) value, it will be deleted. Asking for the length of a key which has no
+  value will act as if the key had an aggregate value of length 0, or whatever
+  other type is appropriate.
 
-  * Lots of useful commands for operating on sets.
+* Lots of useful commands for operating on sets.
 
-  * Sorted sets are nice - can retrieve via range of scores. And can use
-    ``-inf`` or ``+inf`` as a range limit.
+* Sorted sets are nice - can retrieve via range of scores. And can use
+  ``-inf`` or ``+inf`` as a range limit.
 
-  * And if they all have the same score, then the values will be ordered
-    lexicographically, and we can use ZRANGEBYLEX to select ranges.
+* And if they all have the same score, then the values will be ordered
+  lexicographically, and we can use ZRANGEBYLEX to select ranges.
 
-  * Bitmaps just leverage strings. Since strings can be up to 512MB long, the
-    maximum number of bits represented is 2**32.
+* Bitmaps just leverage strings. Since strings can be up to 512MB long, the
+  maximum number of bits represented is 2**32.
 
-  * Hyperhyperlogs count things with an error of less than 1% without using all
-    the memory you'd need to do it accurately.
+* Hyperhyperlogs count things with an error of less than 1% without using all
+  the memory you'd need to do it accurately.
 
-  * https://redis.io/topics/streams-intro --- Redis 5.0 introduces Streams,
-    which look *very* interesting.
+* https://redis.io/topics/streams-intro --- Redis 5.0 introduces Streams,
+  which look *very* interesting.
 
 https://redis.io/topics/faq
 
