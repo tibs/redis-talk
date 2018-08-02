@@ -289,4 +289,190 @@ math, debug, cjson, and cmsgpack. The first several are standard libraries that
 allow you to do the basic operations you’d expect from any language. The last
 two let Redis understand JSON and MessagePack.
 
+Random notes
+============
+
+https://redis.io/
+
+    """Redis is an open source (BSD licensed), in-memory data structure store,
+    used as a database, cache and message broker. It supports data structures
+    such as strings, hashes, lists, sets, sorted sets with range queries,
+    bitmaps, hyperloglogs and geospatial indexes with radius queries. Redis
+    has built-in replication, Lua scripting, LRU eviction, transactions and
+    different levels of on-disk persistence, and provides high availability
+    via Redis Sentinel and automatic partitioning with Redis Cluster."""
+
+(and take a deep breath!)
+
+https://try.redis.io/ -- interactive tutorial
+
+https://redis.io/commands -- nicely laid out documentation of the available
+commands
+
+https://redis.io/clients -- clients in many languages (I count 6*8 + 2 = 50),
+and 14 individual links for Python
+
+https://redis.io/documentation -- links to other documentation
+
+https://redis.io/modules -- (some) modules that extend what you can do with
+Redis
+
+Publish/subscribe messaging https://redis.io/topics/pubsub - nb: independent
+of the key space and the database number. It looks quite nice, and very easy
+to use.
+
+Lua scripting. Which is nicely explained for non-lua programmers.
+
+Time-to-live can be set per key.
+
+https://redis.io/topics/lru-cache -- use as a least-recently used (LRU) cache,
+like memcached
+
+Transactions
+
+Redis (wire) protocol is simple, so (for instance)
+https://redis.io/topics/mass-insert explains how to mass-insert data by
+generating it directly and then piping that into redis-cli, which does
+"special stuff".
+
+Various sorts of partitioning between multiple Redis instances.
+
+https://redis.io/topics/indexes -- recommendations on secondary indexes.
+
+https://redis.io/topics/data-types-intro
+
+  * https://redis.io/topics/data-types is shorter and less complete
+
+  * """Redis is not a *plain* key-value store, it is actually a *data structures
+    server*, supporting different kinds of values."""
+
+    * binary-safe strings
+    * lists (linked lists, so sorted by insertion order)
+    * sets (unique, unsorted string elements)
+    * sorted sets (every string is associated with a floating number value, its
+      score. Score ranges can be used for retrieval of elements)
+    * Hashes (dictionaries of fields -> values, both of which are strings)
+    * Bit arrays (bitmaps) - stored as strings
+    * Hyperloglogs (a probabalistic data structure, used in order to estimate a
+      cardinality(!))
+
+    NB: Whenever Redis says "string", a Python programmer should hear "bytes" -
+    i.e., ``b"string"``.
+
+  * Keys may be any binary sequence.
+   
+    * The empty string is valid.
+    * Very long (e.g., 1024 bytes) probably not a good idea. The maximum size is
+      512MB.
+    * But don't try to shorten artificially - still use well-named keys.
+    * Try to name in a predictable manner. They use ``:`` as a "scoping"
+      delimiter in key names.
+
+  * String values:
+
+    * Maximum size 512MB
+    * SET can be asked to fail if key already exists, or fail if key does not
+      already exist
+    * String values can be atomically incremented and decremented - i.e.,
+      treated as integers
+
+      * *atomic* - multiple clients won't be able to see "inside" the operation
+        of the command - they'll see before and after, and can't interfere with
+        it.
+
+  * EXISTS and DEL (does key exist, delete key (and say if it existed or not))
+
+  * TYPE to tell datatype of the value stored at a given key
+
+  * All keys can be given a timeout
+
+  * Lists: LPUSH and RPUSH, either can take more than one item
+
+    - This is a nice example of how commands can have a prefix to indicate how
+      they differ in their details, or what datastype they apply to
+
+    and of course RPOP and LPOP
+
+  * LTRIM to "trim" a list to the given range
+
+  * "-1" in a range means "the last element" - familiar to Python programmers.
+
+  * Blocking list operations, BRPOP and BLPOP, which will block until there is
+    something the list to be popped. A timeout can be specified, and can wait on
+    more than one list (so it returns a pair of "key, value" so you can tell
+    which list satisfied the request).
+
+  * And thus the wonderful RPOPLPUSH and BRPOPLPUSH
+
+  * Setting a key will create the key if necessary. Similarly, if a key has (no
+    more) value, it will be deleted. Asking for the length of a key which has no
+    value will act as if the key had an aggregate value of length 0, or whatever
+    other type is appropriate.
+
+  * Lots of useful commands for operating on sets.
+
+  * Sorted sets are nice - can retrieve via range of scores. And can use
+    ``-inf`` or ``+inf`` as a range limit.
+
+  * And if they all have the same score, then the values will be ordered
+    lexicographically, and we can use ZRANGEBYLEX to select ranges.
+
+  * Bitmaps just leverage strings. Since strings can be up to 512MB long, the
+    maximum number of bits represented is 2**32.
+
+  * Hyperhyperlogs count things with an error of less than 1% without using all
+    the memory you'd need to do it accurately.
+
+  * https://redis.io/topics/streams-intro --- Redis 5.0 introduces Streams,
+    which look *very* interesting.
+
+https://redis.io/topics/faq
+
+  """
+  Why is Redis different compared to other key-value stores?
+
+  There are two main reasons.
+
+  * Redis is a different evolution path in the key-value DBs where values can
+    contain more complex data types, with atomic operations defined on those
+    data types. Redis data types are closely related to fundamental data
+    structures and are exposed to the programmer as such, without additional
+    abstraction layers.
+  * Redis is an in-memory but persistent on disk database, so it represents a
+    different trade off where very high write and read speed is achieved with
+    the limitation of data sets that can't be larger than memory. Another
+    advantage of in memory databases is that the memory representation of
+    complex data structures is much simpler to manipulate compared to the same
+    data structures on disk, so Redis can do a lot, with little internal
+    complexity. At the same time the two on-disk storage formats (RDB and AOF)
+    don't need to be suitable for random access, so they are compact and
+    always generated in an append-only fashion (Even the AOF log rotation is
+    an append-only operation, since the new version is generated from the copy
+    of data in memory). However this design also involves different challenges
+    compared to traditional on-disk stores. Being the main data representation
+    on memory, Redis operations must be carefully handled to make sure there
+    is always an updated version of the data set on disk.
+  """
+
+  """
+  Is using Redis together with an on-disk database a good idea?
+
+  Yes, a common design pattern involves taking very write-heavy small data in
+  Redis (and data you need the Redis data structures to model your problem in
+  an efficient way), and big blobs of data into an SQL or eventually
+  consistent on-disk database. Similarly sometimes Redis is used in order to
+  take in memory another copy of a subset of the same data stored in the
+  on-disk database. This may look similar to caching, but actually is a more
+  advanced model since normally the Redis dataset is updated together with the
+  on-disk DB dataset, and not refreshed on cache misses.
+  """
+
+  """What does Redis actually mean?  It means REmote DIctionary Server."""
+
+* https://redis.io/topics/security - """Redis is designed to be accessed by
+  trusted clients inside trusted environments"""
+
+* https://redis.io/topics/ARM - Redis on ARM. Supported generally since 4.0,
+  and specifically the RaspberryPI.
+
 .. vim: set filetype=rst tabstop=8 softtabstop=2 shiftwidth=2 expandtab:
