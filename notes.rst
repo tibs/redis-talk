@@ -475,4 +475,11 @@ https://redis.io/topics/faq
 * https://redis.io/topics/ARM - Redis on ARM. Supported generally since 4.0,
   and specifically the RaspberryPI.
 
+
+Some (random) comparisons
+=========================
+* https://www.infoworld.com/article/3063161/nosql/why-redis-beats-memcached-for-caching.html
+* https://www.educba.com/cassandra-vs-redis/
+* https://shuaiw.github.io/2017/08/18/choosing-a-nosql-db.html
+
 .. vim: set filetype=rst tabstop=8 softtabstop=2 shiftwidth=2 expandtab:
