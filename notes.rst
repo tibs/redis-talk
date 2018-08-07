@@ -482,4 +482,13 @@ Some (random) comparisons
 * https://www.educba.com/cassandra-vs-redis/
 * https://shuaiw.github.io/2017/08/18/choosing-a-nosql-db.html
 
+Tardis
+======
+Data communication through time and space - time is the persistence thing,
+space is the between threads/coroutines/images/processes/processors thing.
+
+Also, note how people on Dr Who never have a problem with languages - well,
+Redis supports lots of (programming) languages in its clients (yes, a strained
+analogy!).
+
 .. vim: set filetype=rst tabstop=8 softtabstop=2 shiftwidth=2 expandtab:
