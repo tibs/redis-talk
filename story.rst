@@ -151,7 +151,7 @@ This is where it gets interesting:
 * sorted sets
 * hashes
 * bit arrays
-* hyperloglogs and geospatial values
+* hyperloglogs and geospatial values (and so on?)
 
 ----
 
@@ -163,13 +163,17 @@ A reasonable enough restriction. Go with (e.g.) JSON if it's not sufficient.
 
 Several of those should be familiar to Python programmers.
 
-NB: Probably better to do the following examples using Python.
+NB: Probably sufficient to show the Python examples only, and not the
+redis-cli equivalents.
 
 NB: Probably want to talk about what the Python library I'm using does with
 respect to being given a string instead of a byte string (but avoid this in
 the examples by always using a byte string).
 
 NB: Be prepared to explain why ``StrictRedis`` rather than ``Redis``.
+
+NB: Have a list (just a summary) to hand of all the operations that can be
+done on each value type, and on keys.
 
 ----
 
@@ -324,7 +328,7 @@ Done by adding a *score* (a floatring point number) to each element.
 
 Set is ordered by that score.
 
-Altough scores do no *need* to be unique.
+Altough scores do not *need* to be unique.
 
 Can extract by value, by score, by range of scores (including positive and
 negative infinity).
