@@ -378,6 +378,17 @@ Publish/subscribe messaging https://redis.io/topics/pubsub - nb: independent
 of the key space and the database number. It looks quite nice, and very easy
 to use.
 
+  .. code:: python
+
+    >>> r = redis.StrictRedis(...)
+    >>> p = r.pubsub()
+
+    >>> r.publish('my-first-channel', 'some data')
+    2
+    >>> p.get_message()
+    {'channel': 'my-first-channel', 'data': 'some data',
+     'pattern': None, 'type': 'message'}
+
 Lua scripting. Which is nicely explained for non-lua programmers.
 
 Time-to-live can be set per key.
@@ -593,5 +604,17 @@ https://redis.io/commands/append
 .. image:: images/redis_client_by_language.png
 
 14 clients (of varying status and type) listed for Python
+
+Libraries used
+==============
+
+* aio-pika
+* aioredis
+* mypy
+* redis
+* pytest
+* fakeredis
+* pytest-asyncio
+* freezegun
 
 .. vim: set filetype=rst tabstop=8 softtabstop=2 shiftwidth=2 expandtab:
