@@ -26,6 +26,7 @@ pdf:
 	# Temporarily
 	pandoc notes.rst -o notes.pdf
 	pandoc story.rst -o story.pdf
+	pandoc story.rst -t beamer -o story-slides-4x3.pdf -V aspectratio:43
 	# pandoc redis-slides.rst -t beamer -o redis-slides-4x3.pdf -V aspectratio:43
 	# pandoc redis-slides-wide.rst -t beamer -o redis-slides-16x9.pdf -V aspectratio:169
 	# pandoc notes-per-slide.rst -o notes-per-slide.pdf

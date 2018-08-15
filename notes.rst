@@ -483,6 +483,24 @@ https://redis.io/topics/data-types-intro
 * https://redis.io/topics/streams-intro --- Redis 5.0 introduces Streams,
   which look *very* interesting.
 
+  Abstracting heavily from that page:
+
+    ...models a log data structure in a more abstract way, however the essence
+    of the log is still intact: like a log file, often implemented as a file
+    open in append only mode, Redis streams are primarily an append only data
+    structure. ...
+
+    What makes Redis streams the most complex type of Redis, despite the data
+    structure itself being quite simple, is the fact that it implements
+    additional, non mandatory features: a set of blocking operations allowing
+    consumers to wait for new data added to a stream by producers, and in
+    addition to that a concept called Consumer Groups.
+
+    Consumer groups were initially introduced by the popular messaging system
+    called Kafka (TM). Redis reimplements a similar idea in completely different
+    terms, but the goal is the same: to allow a group of clients to cooperate
+    consuming a different portion of the same stream of messages.
+
 Quoting from https://redis.io/topics/faq
 
   Why is Redis different compared to other key-value stores?
@@ -559,6 +577,8 @@ Pictures
 
 https://redis.io/commands
 
+.. image:: images/redis_webpage_many_commands.png
+
 .. image:: images/redis_webpage_commands.png
 
 .. image:: images/redis_webpage_commands_smaller.png
@@ -568,5 +588,10 @@ https://redis.io/commands/append
 .. image:: images/redis_webpage_command_append.png
 
 .. image:: images/redis_webpage_command_append_smaller.png
+
+
+.. image:: images/redis_client_by_language.png
+
+14 clients (of varying status and type) listed for Python
 
 .. vim: set filetype=rst tabstop=8 softtabstop=2 shiftwidth=2 expandtab:
