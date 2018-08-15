@@ -309,12 +309,16 @@ Random links
 * Testing
 
   - Maybe https://github.com/pytest-dev/pytest-asyncio
+
     - https://pypi.python.org/pypi/pytest-asyncio
     - https://stefan.sofa-rockers.org/ has some useful looking articles
+
         - https://stefan.sofa-rockers.org/2015/04/22/testing-coroutines/
         - https://stefan.sofa-rockers.org/2016/03/10/advanced-asyncio-testing/
+
     - https://jacobbridges.github.io/post/unit-testing-with-asyncio/ compares
       using unittest and pytest.mark.asyncio
+
   - There's some discussion of its use at
     https://stackoverflow.com/questions/45410434/pytest-python-testing-with-asyncio
   - See https://stackoverflow.com/questions/23033939/how-to-test-python-3-4-asyncio-code#23642269
@@ -479,9 +483,8 @@ https://redis.io/topics/data-types-intro
 * https://redis.io/topics/streams-intro --- Redis 5.0 introduces Streams,
   which look *very* interesting.
 
-https://redis.io/topics/faq
+Quoting from https://redis.io/topics/faq
 
-  """
   Why is Redis different compared to other key-value stores?
 
   There are two main reasons.
@@ -505,9 +508,7 @@ https://redis.io/topics/faq
     compared to traditional on-disk stores. Being the main data representation
     on memory, Redis operations must be carefully handled to make sure there
     is always an updated version of the data set on disk.
-  """
 
-  """
   Is using Redis together with an on-disk database a good idea?
 
   Yes, a common design pattern involves taking very write-heavy small data in
@@ -518,9 +519,8 @@ https://redis.io/topics/faq
   on-disk database. This may look similar to caching, but actually is a more
   advanced model since normally the Redis dataset is updated together with the
   on-disk DB dataset, and not refreshed on cache misses.
-  """
 
-  """What does Redis actually mean?  It means REmote DIctionary Server."""
+  What does Redis actually mean?  It means REmote DIctionary Server.
 
 * https://redis.io/topics/security - """Redis is designed to be accessed by
   trusted clients inside trusted environments"""
@@ -543,5 +543,30 @@ space is the between threads/coroutines/images/processes/processors thing.
 Also, note how people on Dr Who never have a problem with languages - well,
 Redis supports lots of (programming) languages in its clients (yes, a strained
 analogy!).
+
+Pictures
+========
+
+.. image:: images/starting_redis_server.png
+
+.. image:: images/redis_cli_help.png
+
+.. image:: images/redis_cli_help_for_hashes.png
+
+.. image:: images/redis_cli_help_for_sets.png
+
+.. image:: images/redis_cli_with_completion.png
+
+https://redis.io/commands
+
+.. image:: images/redis_webpage_commands.png
+
+.. image:: images/redis_webpage_commands_smaller.png
+
+https://redis.io/commands/append
+
+.. image:: images/redis_webpage_command_append.png
+
+.. image:: images/redis_webpage_command_append_smaller.png
 
 .. vim: set filetype=rst tabstop=8 softtabstop=2 shiftwidth=2 expandtab:
