@@ -295,6 +295,40 @@ Can access the last element with index -1.
 
 ----
 
+Is this where I should introduce BRPOPLPUSH, and explain why I like it?
+
+::
+
+  brpoplpush(src, dst, timeout=0)
+      Pop a value off the tail of ``src``, push it on the
+      head of ``dst`` and then return it.
+
+      This command blocks until a value is in ``src`` or
+      until ``timeout`` seconds elapse, whichever is first.
+      A ``timeout`` value of 0 blocks forever.
+
+----
+
+.. code:: python
+
+  >>> r.lpush('my:deque', 1, 2, 3, 4, 5)
+  5
+  >>> r.lrange(b'my:deque', 0, -1)
+  [b'5', b'4', b'3', b'2', b'1']
+  >>> r.brpoplpush(b'my:deque', b'my:deque')
+  b'1'
+
+Note how it returns the value that was rotated.
+
+.. code:: python
+
+  >>> r.lrange(b'my:deque', 0, -1)
+  [b'1', b'5', b'4', b'3', b'2']
+
+And of course I can use it to move the value from one list to another.
+
+----
+
 Sets
 
 Again, very like Python sets
