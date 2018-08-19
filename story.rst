@@ -65,13 +65,6 @@ Well `its website`_ says:
 
 ... and that's not even everything it does!
 
-----
-
-My interest in it is a lot lower-key, and mainly in its role as a key-value
-store.
-
-.. note:: Being a key-value store also puts it in the No-SQL "family"
-   (although that's not particularly interesting to me).
 
 ------------------
 
@@ -84,13 +77,15 @@ I came across it through work, and became enthusiastic about it because:
 
 ------------------
 
-My particular interest is in its use as a persistence mechanism for use with
-Python.
+My interest in mainly in using the key-value store as a persistence mechanism
+for Python.
+
+.. Being a key-value store also puts it in the No-SQL "family"
+   (although that's not particularly interesting to me).
 
 ------------------
 
-Like the Tardis (!) this means that it can communicate data across time and
-space:
+Like the Tardis (!) it can communicate data across time and space:
 
 * across time - a program can save data and re-acquire it later on, in a
   separate run of the process (or after a crash)
@@ -104,9 +99,10 @@ many different programming languages, and an excellent command line client.
 ------------------
 
 This does come at *some* compromise - there are only a limited number of
-actual datastructures supported - but as we'll see the common Python
-datastructures are well supported, as are some interesting other cases, and
-there's always (for instance) JSON.
+actual datastructures supported, and their values also have some restrictions.
+
+But as we'll see the common Python datastructures are there, as are some
+interesting other cases, and there's always (for instance) JSON.
 
 ------------------
 
@@ -114,21 +110,40 @@ So, key-value store:
 
   <key> : <value>
 
+------
+
+Although:
+
+  Redis is not a plain key-value store, it is actually a data structures
+  server, supporting different kinds of values. What this means is that, while
+  in traditional key-value stores you associated string keys to string values,
+  in Redis the value is not limited to a simple string, but can also hold more
+  complex data structures. 
 
 ------
 
-Keys are what Redis refers to as *strings* - in Python we would call them
-byte-strings.
+Keys
+----
+
+Keys are what Redis refers to as *binary safe strings* - in Python we would
+call them byte-strings.
 
 The byte-string is actually the basic datatype in Redis.
 
 Note that Redis does not address encodings - that has to be handled
 out-of-band, which is (in context) reasonable enough.
 
+(but note redis-py will try to do sensible things)
+
 ----
 
 So a Redis key is a byte string, of up to 512MB - although one is discouraged
 from using keys that are too big.
+
+1024 bytes is given as an example of too long - perhaps hash it first.
+
+But the documentation advises not to to too short, as well - try to keep
+meaning in the key.
 
 .. note:: Interestingly, this *does* mean that one can do things like use a
   JSON datastructure as a key.
@@ -142,10 +157,11 @@ b"<namespace>:<name>" (although they tend to say <server> instead of
 ----
 
 So what can values be?
+----------------------
 
 This is where it gets interesting:
 
-* strings
+* binary safe strings (byte strings again)
 * lists
 * sets
 * sorted sets
@@ -186,7 +202,24 @@ Command line:
   tonibb01@spoon ~/sw$ redis-cli
   127.0.0.1:6379>
 
-or Python:
+----
+
+The Redis command line client is rather nice, and can be very useful for
+exploring and testing.
+
+.. image:: images/redis_cli_with_completion.png
+
+NB: explain what the options on that command line mean
+
+----
+
+which as well as completion has nice help
+
+.. image:: images/redis_cli_help.png
+
+----
+
+However, since we're Python programmers, let's use Python:
 
 .. code:: python
 
@@ -195,11 +228,29 @@ or Python:
 
 ----
 
-Strings
+Specifically, we're using redis-py_. The Redis web site lists 14 Python
+clients (of varying status and type), but for redis-py it says:
 
-* binary strings
+  Mature and supported. Currently the way to go for Python. 
+
+We're using the StrictRedis class, which is the norm. There is also a Redis
+class, which is backwards compatible with older versions of the library, that
+didn't follow the actual Redis commands quite so closely - i.e., some
+arguments to methods were in different orders
+
+.. _redis-py: https://github.com/andymccurdy/redis-py
+
+
+----
+
+String values
+-------------
+
+* binary safe strings, just like keys
 * can be (e.g.) JSON
 * again, encoding is out-of-band information
+
+
 
 ----
 
@@ -257,7 +308,39 @@ Usable as sempahores
 
 ----
 
-Lists
+String commands
+---------------
+Include: APPEND, GET, GETRANGE (get substring), GETSET (set to new value,
+return old value), SET, SETNX, SETRANGE, STRLEN
+
+DECR, DECRBY, INCR, INCRBY, INCRBYFLOAT
+
+BITCOUNT, BITFIELD, BITOP, BITPOS, GETBIT, SETBIT
+
+MGET, MSET, MSETNX
+
+----
+
+Argument encoding in redis-py
+-----------------------------
+
+Byte string: nothing to do
+
+For a non-string, convert to a string:
+
+* integer: call ``str`` on it, and encode the result as latin-1
+* float: call ``repr`` on it, and encode the result as latin-1
+* otherwise, call ``str`` on it
+
+String: default to encoding as utf-8, with strict encoder errors.
+
+So, in general, use ``b"..."`` if you can, but otherwise the library should do
+something sensible.
+
+----
+
+List values
+-----------
 
 Very much like Python lists, but also like deques.
 
@@ -292,6 +375,12 @@ Can access the last element with index -1.
   >>> r.lrange(b'my:list', 0, -1)
   [b'3', b'2']
 
+----
+
+List commands: BLPOP, BRPOP, BRPOPLPUSH, LINDEX (get element by index),
+LINSERT, LLEN, LPOP, LPUSH, LPUSHX (prepend value, only if list exists),
+LRANGE (get range of elements), LREM (remove elements), LSET, LTRIM (trim list
+to specific length), RPOP, RPOPLPUSH, RPUSH, RPUSHX
 
 ----
 
@@ -329,7 +418,8 @@ And of course I can use it to move the value from one list to another.
 
 ----
 
-Sets
+Set values
+----------
 
 Again, very like Python sets
 
@@ -353,10 +443,16 @@ Again, very like Python sets
   >>> r.smembers(b'my:set')
   {b'a', b'c', b'b'}
 
+----
+
+Set commands:  SADD, SCARD ("cardinality" = size), SDIFF (subtract sets),
+SDIFFSTORE (SDIFF and store the result), SINTER (intersect sets), SINTERSTORE,
+SISMEMBER,
 
 ----
 
-Sorted sets
+Sorted set values
+-----------------
 
 Done by adding a *score* (a floatring point number) to each element.
 
@@ -395,8 +491,21 @@ negative infinity).
   >>> r.zrange(b'my:zset', 1, -1, withscores=True)
   [(b'b', 1.0)]
 
+----
+
+Sorted set commands:  ZADD, ZCARD, ZCOUNT (count members
+with a given score), ZINCRBY (incremement score of a member), ZINTERSTORE,
+ZLEXCOUNT, ZPOPMAX (remove and return members with the highest scores),
+ZPOPMIN, ZRANGE, ZRANGEBYLEX, ZREVRANGEBYLEX, ZRANGEBYSCORE, ZRANK, ZREM,
+ZREMRANGEBYLEX, ZREMRANGEBYRANK, ZREMRANGEBYSCORE, ZREVRANGE,
+ZREVRANGEBYSCORE, ZREVRANK, ZSCORE, ZUNIONSTORE, ZSCAN
+
+Blocking: BZPOPMIN, BZPOPMAX
 
 ----
+
+Hash values
+-----------
 
 Hashes - just like Python dictionaries, although the hash keys (fields) and
 values have to be binary strings.
@@ -439,6 +548,11 @@ NB: It's possible to increment and decrement hash values.
   >>> r.hgetall(b'my:dict')
   {b'k1': b'val1', b'k2': b'val2'}
 
+----
+
+Hash value commands: HDEL, HEXISTS (does a field exist), HGET, HGETALL
+(Python ``items()``), HINCRBY, HINCRBYFLOAT, HKEYS, HLEN, HMGET (get values
+for multiple keys), HMSET, HSET, HSETNX, HSTRLEN, HVALS, HSCAN
 
 ----
 
@@ -457,12 +571,28 @@ Note: it is possible to delete things whether they exist or not:
 
 ----
 
+Other sorts of value
+--------------------
+
 Bit arrays: a nice specialisation of strings to give bitmaps, with useful
 operations on them.
 
 Geo-spatial items: items on a sphere representing the earth.
 
 Hyperloglogs: if you know what they are, you probably like having them.
+
+----
+
+Commands on keys
+----------------
+Include:
+
+DEL (delete), DUMP (serialised version of its value), EXISTS, EXPIRE (set its
+TTL), KEYS (find all keys matching a pattern), MIGRATE (from one Redis
+instance to another), MOVE (to a different databse), RENAME, RENAMENX (rename
+only if the new key does not exist), RESTORE (from a DUMP), SORT (the elements
+in a list, set or sorted set), TOUCH, TTL (get its TTL), TYPE (determine the
+type stored at that key), SCAN (iterate over keys)
 
 ----
 
@@ -509,23 +639,13 @@ Individual command documentation
 
 .. image:: images/redis_client_by_language.png
 
-----
-
-14 clients (of varying status and type) listed for Python
-
-They say:
-
-  redis-py Mature and supported. Currently the way to go for Python. 
-
-https://github.com/andymccurdy/redis-py
-
-and that's the library we've been using in the examples so far.
 
 ----
 
-Testing
+Unit Testing
+------------
 
-Because we use redis-py, we then use fakeredis for unit testing
+Because we use redis-py, we use fakeredis for unit testing
 
 https://github.com/jamesls/fakeredis
 
@@ -549,9 +669,9 @@ https://github.com/jamesls/fakeredis
 
 ----
 
-For asyncio, I've been experimenting with aioredis
+For asyncio, I've been experimenting with aioredis_
 
-https://github.com/aio-libs/aioredis
+.. _aioredis: https://github.com/aio-libs/aioredis
 
 which provides an API very like redis-py, but asyncio
 
@@ -591,6 +711,26 @@ And pytest-asyncio_ is very nice.
                                          timeout)
 
         # and so on (only *with* docstrings!)
+
+----
+
+The asyncio version of our earlier test is very similar
+
+.. code:: python
+
+  @pytest.mark.asyncio
+  def test_my_understanding_of_zadd(
+      event_loop: BaseSelectorEventLoop
+  ):
+      ar = JustEnoughAsyncRedis()
+
+      now_timestamp = datetime(2018, 4, 23, 0, 0, 0).now()
+
+      await ar.zadd(b'timeout', now_timestamp, b'text')
+
+      assert await ar.zrange(b'timeout',
+                             0, -1, withscores=True) \
+          == [(b'text', now_timestamp)]
 
 ----
 
