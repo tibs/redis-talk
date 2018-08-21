@@ -377,10 +377,29 @@ Can access the last element with index -1.
 
 ----
 
-List commands: BLPOP, BRPOP, BRPOPLPUSH, LINDEX (get element by index),
+List commands: LINDEX (get element by index),
 LINSERT, LLEN, LPOP, LPUSH, LPUSHX (prepend value, only if list exists),
 LRANGE (get range of elements), LREM (remove elements), LSET, LTRIM (trim list
 to specific length), RPOP, RPOPLPUSH, RPUSH, RPUSHX
+
+Blocking: BLPOP, BRPOP, BRPOPLPUSH,
+
+----
+
+i.e.
+
+* push new element on either end,
+* same but only if the list actually exists (is non-empty),
+* pop element from either end,
+* blocking versions of same,
+* get element by index,
+* set element by index,
+* get length of list,
+* insert element before or after a particular value,
+* remove N elements with a given value,
+* trim list to specific range of indices,
+* rotate element (RPOPLPUSH)
+* blocking version of same
 
 ----
 
@@ -451,6 +470,18 @@ SISMEMBER,
 
 ----
 
+i.e.,
+
+* add an element
+* get the size of the set
+* subtract sets
+* same and store the result
+* intersect sets
+* same and store the result
+* is a value a member?
+
+----
+
 Sorted set values
 -----------------
 
@@ -501,6 +532,16 @@ ZREMRANGEBYLEX, ZREMRANGEBYRANK, ZREMRANGEBYSCORE, ZREVRANGE,
 ZREVRANGEBYSCORE, ZREVRANK, ZSCORE, ZUNIONSTORE, ZSCAN
 
 Blocking: BZPOPMIN, BZPOPMAX
+
+----
+
+i.e.,
+
+* add a score and value
+* get the size of the set
+* count members with a given score
+* increment/decrement the score of a member
+* ...
 
 ----
 
@@ -589,7 +630,7 @@ Include:
 
 DEL (delete), DUMP (serialised version of its value), EXISTS, EXPIRE (set its
 TTL), KEYS (find all keys matching a pattern), MIGRATE (from one Redis
-instance to another), MOVE (to a different databse), RENAME, RENAMENX (rename
+instance to another), MOVE (to a different database), RENAME, RENAMENX (rename
 only if the new key does not exist), RESTORE (from a DUMP), SORT (the elements
 in a list, set or sorted set), TOUCH, TTL (get its TTL), TYPE (determine the
 type stored at that key), SCAN (iterate over keys)
@@ -669,6 +710,13 @@ https://github.com/jamesls/fakeredis
 
 ----
 
+.. note:: If ``singleton`` is True, then this FakeStrictRedis instance will
+  share its state with other instances (which had ``singleton`` True). I find
+  that's not normally what I want in unit tests, where I don't want state to
+  carry over between tests.
+
+----
+
 For asyncio, I've been experimenting with aioredis_
 
 .. _aioredis: https://github.com/aio-libs/aioredis
@@ -714,14 +762,23 @@ And pytest-asyncio_ is very nice.
 
 ----
 
+.. note:: The class can be given an existing FakeStrictRedis instance, or
+   create its own.
+
+   It can be useful to use an existing instance when one wants to populate or
+   retrieve keys in the instance without using the asynchronous interface.
+
+   (is that worth saying? is it worth the bother in an example? should I
+   just remove that capability for simplicity?)
+
+----
+
 The asyncio version of our earlier test is very similar
 
 .. code:: python
 
   @pytest.mark.asyncio
-  def test_my_understanding_of_zadd(
-      event_loop: BaseSelectorEventLoop
-  ):
+  def test_my_understanding_of_zadd(event_loop):
       ar = JustEnoughAsyncRedis()
 
       now_timestamp = datetime(2018, 4, 23, 0, 0, 0).now()
