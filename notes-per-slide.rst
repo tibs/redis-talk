@@ -516,7 +516,7 @@ Sorted set values
 
   <key> : <value> and <score>
 
-Done by adding a *score* (a floatring point number) to each element.
+Done by adding a *score* (a floating point number) to each element.
 
 Set is ordered by that score.
 

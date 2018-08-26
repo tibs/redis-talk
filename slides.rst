@@ -44,18 +44,18 @@ Well `its website`_ says:
 
 ... and that's not even everything it does!
 
+-----
 
-------------------
+Multi-language support
+----------------------
 
-So, key-value store::
+.. image:: images/redis_client_by_language.png
 
-  <key> : <value>
 
 ------
 
-Keys
-----
-
+**Key** : value
+---------------
 Keys are what Redis refers to as *binary safe strings* - in Python we would
 call them byte-strings.
 
@@ -66,19 +66,13 @@ out-of-band, which is (in context) reasonable enough.
 
 (but note redis-py will try to do sensible things)
 
-----
-
-Traditionally, examples of Redis keys are given in the form
-b"<namespace>:<name>" (although they tend to say <server> instead of
-<namespace>).
+Traditionally, examples of Redis keys look like b"<namespace>:<name>"
+(although they tend to say <server> instead of <namespace>).
 
 ----
 
-So what can values be?
-----------------------
-
-This is where it gets interesting:
-
+Key: **Value**
+--------------
 * binary safe strings (byte strings again)
 * lists
 * sets
@@ -90,8 +84,6 @@ This is where it gets interesting:
 ----
 
 So, let's make a connection to a Redis server:
-
-Command line:
 
 .. code:: sh
 
@@ -107,9 +99,9 @@ exploring and testing.
 
 ----
 
-which as well as completion has nice help
+It also has nice help
 
-.. image:: images/redis_cli_help.png
+.. image:: images/redis_cli_help_for_hashes.png
 
 ----
 
@@ -158,14 +150,24 @@ Atomic incremenent/decrement; Usable as sempahores
 
 String commands
 ---------------
-Include: APPEND, GET, GETRANGE (get substring), GETSET (set to new value,
-return old value), SET, SETNX, SETRANGE, STRLEN
+* ``GET``, ``SET`` - get and set
+* ``STRLEN`` - get length
+* ``APPEND`` - append
+* ``GETRANGE``, ``SETRANGE`` - get/set substring
+* ``GETSET`` - set to new value and return old value
+* ``SETNX`` - set only if the key does not exist
 
-DECR, DECRBY, INCR, INCRBY, INCRBYFLOAT
+and:
 
-BITCOUNT, BITFIELD, BITOP, BITPOS, GETBIT, SETBIT
+* ``INCR``, ``DECR`` - increment, decrement
+* ``INCRBY``, ``DECRBY`` - ditto by other values
+* ``INCRBYFLOAT`` - increment by floating point value
 
-MGET, MSET, MSETNX
+also:
+
+* ``MGET`` - get multiple values (from their keys)
+* ``MSET`` - set multiple key/value pairs at same time
+* ``MSETNX`` - ditto only if none of the keys exist
 
 ----
 
@@ -206,16 +208,25 @@ Very much like Python lists, but also like deques.
 
 ----
 
-List commands: LINDEX (get element by index),
-LINSERT, LLEN, LPOP, LPUSH, LPUSHX (prepend value, only if list exists),
-LRANGE (get range of elements), LREM (remove elements), LSET, LTRIM (trim list
-to specific length), RPOP, RPOPLPUSH, RPUSH, RPUSHX
-
-Blocking: BLPOP, BRPOP, BRPOPLPUSH,
+List commands
+-------------
+* ``LPUSH``, ``RPUSH`` - push new element on either end,
+* ``LPUSHX``, ``RPUSHX`` - same but only if the list exists
+* ``LPOP``, ``RPOP`` - pop element from either end,
+* ``BLPOP``, ``BRPOP`` - blocking versions of same,
+* ``LINDEX`` - get element by index,
+* ``LSET`` - set element by index,
+* ``LLEN`` - get length of list,
+* ``LINSERT`` - insert element before or after a particular value,
+* ``LREM`` - remove N elements with a given value,
+* ``LTRIM`` - trim list to specific range of indices,
+* ``RPOPLPUSH`` - rotate element
+* ``BRPOPLPUSH`` - blocking version of same
 
 ----
 
-Is this where I should introduce BRPOPLPUSH, and explain why I like it?
+My favourite Redis instruction
+------------------------------
 
 ::
 
@@ -263,9 +274,15 @@ Again, very like Python sets
 
 ----
 
-Set commands:  SADD, SCARD ("cardinality" = size), SDIFF (subtract sets),
-SDIFFSTORE (SDIFF and store the result), SINTER (intersect sets), SINTERSTORE,
-SISMEMBER,
+Set commands
+------------
+* ``SADD`` - add an element
+* ``SCARD`` - get the size of the set
+* ``SDIFF`` - subtract sets
+* ``SDIFFSTORE`` - same and store the result
+* ``SINTER`` - intersect sets
+* ``SINTERSTORE`` - same and store the result
+* ``SISMEMBER`` - is a value a member?
 
 ----
 
@@ -276,7 +293,7 @@ Sorted set values
 
   <key> : <value> and <score>
 
-Done by adding a *score* (a floatring point number) to each element.
+Done by adding a *score* (a floating point number) to each element.
 
 Set is ordered by that score.
 
@@ -300,14 +317,21 @@ negative infinity).
 
 ----
 
-Sorted set commands:  ZADD, ZCARD, ZCOUNT (count members
-with a given score), ZINCRBY (incremement score of a member), ZINTERSTORE,
-ZLEXCOUNT, ZPOPMAX (remove and return members with the highest scores),
-ZPOPMIN, ZRANGE, ZRANGEBYLEX, ZREVRANGEBYLEX, ZRANGEBYSCORE, ZRANK, ZREM,
-ZREMRANGEBYLEX, ZREMRANGEBYRANK, ZREMRANGEBYSCORE, ZREVRANGE,
-ZREVRANGEBYSCORE, ZREVRANK, ZSCORE, ZUNIONSTORE, ZSCAN
+Sorted set commands
+-------------------
 
-Blocking: BZPOPMIN, BZPOPMAX
+* ``ZADD`` and so on - equivalent to set commands, but with a score
+ 
+* ``ZADD`` - add a score and value
+
+  * and other equivalents to set commands, but with a score
+
+* ``ZCOUNT`` - count members with a given score
+* ``ZINCBY`` - increment the score of a member
+* ``ZPOPMIN``, ``ZPOPMAX`` - pop the members with lowest/highest scores
+* ``ZRANGE`` - return a range (subset) of members by index
+* ``ZRANGEBYSCORE`` - return a range (subset) of members by score
+* all sorts of other operations...
 
 ----
 
@@ -340,10 +364,21 @@ values have to be binary strings.
 
 ----
 
-Hash value commands: HDEL, HEXISTS (does a field exist), HGET, HGETALL
-(Python ``items()``), HINCRBY, HINCRBYFLOAT, HKEYS, HLEN, HMGET (get values
-for multiple keys), HMSET, HSET, HSETNX, HSTRLEN, HVALS, HSCAN
-
+Hash value commands
+-------------------
+* ``HSET`` - set a hash field's value
+* ``HSETNX`` - set a hash field's value iff it does not exist
+* ``HGET`` - get a hash field's value
+* ``HDEL`` - delete one or more hash fields
+* ``HEXISTS`` - does a given hash field exist?
+* ``HGETALL`` - get all the hash fields and their values
+* ``HKEYS`` - get all the hash fields
+* ``HVALS`` - get all the values
+* ``HLEN`` - get the number of fields in a hash
+* ``HMGET``, ``HMSET`` - get or set multiple hash fields at the same time
+* ``HSTRLEN`` - get the length of a hash field's value
+* ``HSCAN`` - iterate over hash fields and their values
+* ``HINCRBY`` - increment a hash field
 
 ----
 
@@ -377,55 +412,31 @@ Hyperloglogs: if you know what they are, you probably like having them.
 
 Commands on keys
 ----------------
-Include:
 
-DEL (delete), DUMP (serialised version of its value), EXISTS, EXPIRE (set its
-TTL), KEYS (find all keys matching a pattern), MIGRATE (from one Redis
-instance to another), MOVE (to a different database), RENAME, RENAMENX (rename
-only if the new key does not exist), RESTORE (from a DUMP), SORT (the elements
-in a list, set or sorted set), TOUCH, TTL (get its TTL), TYPE (determine the
-type stored at that key), SCAN (iterate over keys)
-
-----
-
-...at this point go back to the CLI?
-
-.. image:: images/redis_cli_with_completion.png
-
-Those options mean:
-
-* EX seconds -- Set the specified expire time, in seconds.
-* PX milliseconds -- Set the specified expire time, in milliseconds.
-* NX -- Only set the key if it does not already exist.
-* XX -- Only set the key if it already exist.
-
-This means that the SET command can also be used instead of the SETNX, SETEX
-and PSETEX commands.
+* ``DEL`` delete one or more keys
+* ``RENAME``, ``RENAMENX`` - rename a key, and rename only if the new name doesn't exist
+* ``DUMP``, ``RESTORE`` - dump its value, serialised, and restore from same
+* ``EXISTS`` - check if one or more keys exist
+* ``KEYS`` - find all keys matching a particular (glob-style) pattern
+* ``TYPE`` - report what type is stored at a key
+* ``PEXPIRE``, etc. - set or get its TTL
+* ``MIGRATE`` - migrate from one Redis instance to another
+* ``MOVE`` - move to a different database
+* ``SORT`` - sort (the elements of a list, set or sorted set) and return or store the
+  result
+* ``SCAN`` iterate over keys
+* ``RANDOMKEY`` - return a random key
+* ``TOUCH`` - change the last access time of a key
 
 ----
 
-which as well as completion has nice help
+My one grumble about redis-py
+-----------------------------
 
-.. image:: images/redis_cli_help.png
-
-----
-
-
-.. image:: images/redis_cli_help_for_hashes.png
-
-(obviously more not shown)
-
-----
-
-I do have a grumble about the Python version of the PING command.
-
-Redis says:
+Redis says ``PING``:
 
   Returns PONG if no argument is provided, otherwise return a copy of the
-  argument as a bulk. This command is often used to test if a connection is
-  still alive, or to measure latency.
-
-for instance:
+  argument as a bulk.
 
 .. code:: sh
 
@@ -434,7 +445,7 @@ for instance:
   redis> PING "hello world"
   "hello world"
 
-but for some reason the Python API doesn't work that way:
+but redis-py doesn't work that way:
 
 .. code:: python
 
@@ -444,9 +455,6 @@ but for some reason the Python API doesn't work that way:
   Traceback (most recent call last):
     File "<stdin>", line 1, in <module>
   TypeError: ping() takes 1 positional argument but 2 were given
-
-(and yes, I really am having to look at the "ping" command in order to find
-something to grumble about. However, I did waste some time diagnosing this!)
 
 ----
 
@@ -473,24 +481,9 @@ for a particular type of value or other topic ("Filter by group").
 -----
 
 Individual command documentation
+--------------------------------
 
 .. image:: images/redis_webpage_command_append_smaller.png
-
-These generally show:
-
-* the details of the particular command
-* some examples
-* some common patterns of usage, and advise on when to use them
-* links to related commands
-
-On the whole, the documentation at this level is excellent.
-
-The redis-py library is mostly designed so that this documentation can be
-directly used in Python code.
-
------
-
-.. image:: images/redis_client_by_language.png
 
 
 ----
