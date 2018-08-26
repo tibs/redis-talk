@@ -11,10 +11,9 @@ default: html pdf
 .PHONY: html
 html:
 	rst2html.py README.rst README.html
-	# Temporarily
+	rst2html.py slides.rst slides.html
 	rst2html.py notes.rst notes.html
-	rst2html.py story.rst story.html
-	#rst2html.py notes-per-slide.rst notes-per-slide.html
+	rst2html.py notes-per-slide.rst notes-per-slide.html
 
 # The available aspect ratio of slides (for beamer only) are 1610 for 16:10,
 # 169 for 16:9, 149 for 14:9, 141 for 1.41:1, 54 for 5:4, 43 for 4:3 which is
@@ -23,13 +22,10 @@ html:
 # We also make the notes-per-slide as PDF, because we can and it might be useful.
 .PHONY: pdf
 pdf:
-	# Temporarily
+	pandoc slides.rst -t beamer -o redis-slides-4x3.pdf -V aspectratio:43
+	pandoc slides.rst -t beamer -o redis-slides-16x9.pdf -V aspectratio:169
 	pandoc notes.rst -o notes.pdf
-	pandoc story.rst -o story.pdf
-	pandoc story.rst -t beamer -o story-slides-4x3.pdf -V aspectratio:43
-	# pandoc redis-slides.rst -t beamer -o redis-slides-4x3.pdf -V aspectratio:43
-	# pandoc redis-slides-wide.rst -t beamer -o redis-slides-16x9.pdf -V aspectratio:169
-	# pandoc notes-per-slide.rst -o notes-per-slide.pdf
+	pandoc notes-per-slide.rst -o notes-per-slide.pdf
 
 .PHONY: clean
 clean:

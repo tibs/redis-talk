@@ -77,7 +77,7 @@ I came across it through work, and became enthusiastic about it because:
 
 ------------------
 
-My interest in mainly in using the key-value store as a persistence mechanism
+My interest is mainly in using the key-value store as a persistence mechanism
 for Python.
 
 .. Being a key-value store also puts it in the No-SQL "family"
@@ -106,7 +106,7 @@ interesting other cases, and there's always (for instance) JSON.
 
 ------------------
 
-So, key-value store:
+So, key-value store::
 
   <key> : <value>
 
@@ -272,7 +272,7 @@ String values
 
 ----
 
-But also can treat as integers
+But also can treated as integers
 
 (so b'10' represents 10)
 
@@ -318,6 +318,31 @@ DECR, DECRBY, INCR, INCRBY, INCRBYFLOAT
 BITCOUNT, BITFIELD, BITOP, BITPOS, GETBIT, SETBIT
 
 MGET, MSET, MSETNX
+
+----
+
+i.e.,
+
+* get and set
+* get length
+* append
+* get substring, set substring
+* set to new value and return old value
+* set only if the key does not exist
+
+and:
+
+* increment, decrement
+* ditto by other values
+* inrement by floating point value
+
+also:
+
+* get multiple values (from their keys)
+* set multiple key/value pairs at same time
+* ditto only if none of the keys exist
+
+I'll ignore the bit operations
 
 ----
 
@@ -480,10 +505,16 @@ i.e.,
 * same and store the result
 * is a value a member?
 
+... maybe should show an example of storing a result?
+
 ----
 
 Sorted set values
 -----------------
+
+::
+
+  <key> : <value> and <score>
 
 Done by adding a *score* (a floatring point number) to each element.
 
@@ -541,7 +572,7 @@ i.e.,
 * get the size of the set
 * count members with a given score
 * increment/decrement the score of a member
-* ...
+* all sorts of other operations...
 
 ----
 
@@ -552,6 +583,10 @@ Hashes - just like Python dictionaries, although the hash keys (fields) and
 values have to be binary strings.
 
 NB: It's possible to increment and decrement hash values.
+
+::
+
+  <key> : <field> : <value>
 
 ----
 
@@ -597,18 +632,37 @@ for multiple keys), HMSET, HSET, HSETNX, HSTRLEN, HVALS, HSCAN
 
 ----
 
-Note: it is possible to delete things whether they exist or not:
+i.e.,
+
+* set a hash field's value
+* set a hash field's value iff it does not exist
+* get a hash field's value
+* delete one or more hash fields
+* does a given hash field exist?
+* get all the hash fields and their values
+* get all the hash fields
+* get all the values
+* get the number of hash fields
+* get or set multiple hash fields at the same time
+* get the length of a hash field's value
+* iterate over hash fields and their values
+
+Also, increment and decrement a hash field (as for a plain value)
+
+----
+
+Note: In general, it is possible to delete things whether they exist or not:
 
 .. code:: python
 
   >>> r.delete(b'my:dict')
   1                               # It existed
   >>> r.exists(b'my:dict')
-  False                           # It did not exist
+  False                           # It no longer exists
   >>> r.delete(b'no:such:thing')
-  0
+  0                               # We deleted a non-existant thing
   >>> r.exists(b'no:such:thing')
-  False
+  False                           # Which still doesn't exist
 
 ----
 
@@ -616,7 +670,8 @@ Other sorts of value
 --------------------
 
 Bit arrays: a nice specialisation of strings to give bitmaps, with useful
-operations on them.
+operations on them. Counted as string operations (in the same way that
+incrementing/decrementing is counted as working on strings).
 
 Geo-spatial items: items on a sphere representing the earth.
 
@@ -637,11 +692,38 @@ type stored at that key), SCAN (iterate over keys)
 
 ----
 
+i.e., general top-level commands:
+
+* delete one or more keys
+* rename a key, and rename only if the new name doesn't exist
+* dump its value, serialised, and restore from same
+* check if one or more keys exist
+* find all keys matching a particular (glob-style) pattern
+* report what type is stored at a key
+* set or get its TTL
+* migrate from one Redis instance to another
+* move to a different database
+* sort (the elements of a list, set or sorted set) and return or store the
+  result
+* iterate over keys
+* return a random key
+* change the last access time of a key ("touch")
+
+----
+
 ...at this point introduce the CLI?
 
 .. image:: images/redis_cli_with_completion.png
 
-NB: explain what the options on that command line mean
+Those options mean:
+
+* EX seconds -- Set the specified expire time, in seconds.
+* PX milliseconds -- Set the specified expire time, in milliseconds.
+* NX -- Only set the key if it does not already exist.
+* XX -- Only set the key if it already exist.
+
+This means that the SET command can also be used instead of the SETNX, SETEX
+and PSETEX commands.
 
 ----
 
@@ -658,7 +740,49 @@ which as well as completion has nice help
 
 ----
 
+I do have a grumble about the Python version of the PING command.
+
+Redis says:
+
+  Returns PONG if no argument is provided, otherwise return a copy of the
+  argument as a bulk. This command is often used to test if a connection is
+  still alive, or to measure latency.
+
+for instance:
+
+.. code:: sh
+
+  redis> PING
+  "PONG"
+  redis> PING "hello world"
+  "hello world"
+
+but for some reason the Python API doesn't work that way:
+
+.. code:: python
+
+  >>> r.ping()
+  True
+  >>> r.ping('Hello world')
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+  TypeError: ping() takes 1 positional argument but 2 were given
+
+(and yes, I really am having to look at the "ping" command in order to find
+something to grumble about. However, I did waste some time diagnosing this!)
+
+----
+
 ...and the online documentation?
+
+Is generally excellent.
+
+It's mostly organised as articles introducing useful parts of Redis, and
+specific pages for each of the individual commands.
+
+The introductory tutorial `Introduction to Redis data types`_ is rather good.
+
+.. _`Introduction to Redis data types`: https://redis.io/topics/data-types-intro
 
 ----
 
@@ -666,7 +790,8 @@ Commands overview
 
 .. image:: images/redis_webpage_commands_smaller.png
 
-...
+This is laid out rather nicely, and you can select to show just the commands
+for a particular type of value or other topic ("Filter by group").
 
 -----
 
@@ -674,7 +799,17 @@ Individual command documentation
 
 .. image:: images/redis_webpage_command_append_smaller.png
 
-...
+These generally show:
+
+* the details of the particular command
+* some examples
+* some common patterns of usage, and advise on when to use them
+* links to related commands
+
+On the whole, the documentation at this level is excellent.
+
+The redis-py library is mostly designed so that this documentation can be
+directly used in Python code.
 
 -----
 
