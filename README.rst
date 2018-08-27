@@ -62,7 +62,7 @@ and an appropriate ``make`` program if you want to use the Makefile.
 
 .. _`PyCon UK 2018`: http://2018.pyconuk.org/
 .. _CamPUG: https://www.meetup.com/CamPUG/
-.. _`October 2018`: https://www.meetup.com/CamPUG/events/lwlsmpyxmbgb/
+.. _`September 2018`: https://www.meetup.com/CamPUG/events/lwlsmpyxmbgb/
 .. _pandoc: https://pandoc.org/
 .. _docutils: http://docutils.sourceforge.net/
 .. _reStructuredText: http://docutils.sourceforge.net/rst.html
