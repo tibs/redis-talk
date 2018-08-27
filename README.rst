@@ -1,4 +1,73 @@
-*Nothing to see here yet*
+Redis: persistent collections as a service (and for fun)
+========================================================
+
+A quick introduction to Redis, and why I really like it
+
+This is a slideshow originally produced for `PyCon UK 2018`_
+
+History
+~~~~~~~
+* Not yet presented.
+* A preliminary version will be given at the `September 2018`_ CamPUG_ meeting.
+* And probably at work as well.
+
+The files
+~~~~~~~~~
+All sources are in reStructuredText_, and thus intended to be readable as
+plain text.
+
+* The sources for the slides are in `<redis-slides.rst>`_.
+* Notes per slide (for the presenter) are separated out into `<notes-per-slide.rst>`_.
+* Extended notes (with links) are in `<markup-history-extended-notes.rst>`_.
+
+(Note that github will present the ``.rst`` files in rendered form as HTML,
+albeit using their own styling (which makes notes a bit odd). If you want
+to see the original reStructuredText source, you have to click on the "Raw"
+link at the top of the file's page.)
+
+Since this version of the talk uses PDF slides, which I produce via pandoc_
+and TeX_, I'm including the resultant PDF files in the repository. These
+will not always be as up-to-date as the source files, so check their
+timestamps.
+
+* The 4x3 aspect ratio slides are `<redis-slides-4x3.pdf>`_.
+* The 16x9 aspect ratio slides are `<redis-slides-16x9.pdf>`_.
+* There is a PDF version of the notes per slide in `<notes-per-slide.pdf>`_.
+
+.. At the moment, I'm not splitting the notes-per-slide onto individual pages,
+.. so comment out the following:
+.. 
+..  Beware that it is set with the information for each slide on a separate (A4)
+..  page.
+
+Making the PDF and HTML files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+For convenience, you can use the Makefile to create the PDF slides, create the
+HTML version of the extended notes, and so on. For instance::
+
+  $ make pdf
+
+will make the PDF files.
+
+For what the Makefile can do, use::
+
+  $ make help
+
+Requirements to build the documents:
+
+* pandoc_ and TeX_ (on mac, BasicTeX should be enough)
+* docutils_ (for reStructuredText_)
+
+and an appropriate ``make`` program if you want to use the Makefile.
+
+.. _`PyCon UK 2018`: http://2018.pyconuk.org/
+.. _CamPUG: https://www.meetup.com/CamPUG/
+.. _`October 2018`: https://www.meetup.com/CamPUG/events/lwlsmpyxmbgb/
+.. _pandoc: https://pandoc.org/
+.. _docutils: http://docutils.sourceforge.net/
+.. _reStructuredText: http://docutils.sourceforge.net/rst.html
+.. _TeX: https://www.ctan.org/starter
+
 
 --------
 

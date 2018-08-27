@@ -11,7 +11,7 @@ default: html pdf
 .PHONY: html
 html:
 	rst2html.py README.rst README.html
-	rst2html.py slides.rst slides.html
+	rst2html.py redis-slides.rst redis-slides.html
 	rst2html.py notes.rst notes.html
 	rst2html.py notes-per-slide.rst notes-per-slide.html
 
@@ -21,20 +21,18 @@ html:
 # pair of resolutions.
 # We also make the notes-per-slide as PDF, because we can and it might be useful.
 .PHONY: pdf
-pdf:
-	pandoc slides.rst -t beamer -o redis-slides-4x3.pdf -V aspectratio:43
-	pandoc slides.rst -t beamer -o redis-slides-16x9.pdf -V aspectratio:169
+pdf: slides
 	pandoc notes.rst -o notes.pdf -V papersize:a4
 	pandoc notes-per-slide.rst -o notes-per-slide.pdf -V papersize:a4
 
 .PHONY: slides
 slides:
-	pandoc slides.rst -t beamer -o redis-slides-4x3.pdf -V aspectratio:43
-	pandoc slides.rst -t beamer -o redis-slides-16x9.pdf -V aspectratio:169
+	pandoc redis-slides.rst -t beamer -o redis-slides-4x3.pdf -V aspectratio:43
+	pandoc redis-slides.rst -t beamer -o redis-slides-16x9.pdf -V aspectratio:169
 
 .PHONY: 43
 43:
-	pandoc slides.rst -t beamer -o redis-slides-4x3.pdf -V aspectratio:43
+	pandoc redis-slides.rst -t beamer -o redis-slides-4x3.pdf -V aspectratio:43
 	open redis-slides-4x3.pdf
 
 .PHONY: clean

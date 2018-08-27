@@ -42,6 +42,19 @@ with fakeredis (I consider it very important to show that unit testing is
 possible and easy, because we're all used to the hassle of unit testing things
 as seemingly simple as Requests).
 
+.. In the notes for the markup-history slides, I separated the text for each
+.. slide out onto a separate page (and mentioned that in the README). I'm not
+.. 100% sure that actually helped me navigate the notes - it certainly took
+.. up more paper - so let's try *not* doing that, with the appropriate runes
+.. commented out here, just in case I change my mind.
+..
+.. If I *do* change my mind, I need to change the slide delimiter (``----``)
+.. for the LaTeX rawpage directive.
+.. 
+.. .. raw:: latex
+.. 
+..    \newpage
+
 ----
 
 So what is Redis?
