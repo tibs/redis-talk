@@ -39,6 +39,7 @@ So what is Redis?
     --- https://redis.io/
 
 ----
+
 Connecting to a server using the command line
 ---------------------------------------------
 
