@@ -24,8 +24,8 @@ html:
 pdf:
 	pandoc slides.rst -t beamer -o redis-slides-4x3.pdf -V aspectratio:43
 	pandoc slides.rst -t beamer -o redis-slides-16x9.pdf -V aspectratio:169
-	pandoc notes.rst -o notes.pdf
-	pandoc notes-per-slide.rst -o notes-per-slide.pdf
+	pandoc notes.rst -o notes.pdf -V papersize:a4
+	pandoc notes-per-slide.rst -o notes-per-slide.pdf -V papersize:a4
 
 .PHONY: slides
 slides:
