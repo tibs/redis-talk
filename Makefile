@@ -27,13 +27,24 @@ pdf:
 	pandoc notes.rst -o notes.pdf
 	pandoc notes-per-slide.rst -o notes-per-slide.pdf
 
+.PHONY: slides
+slides:
+	pandoc slides.rst -t beamer -o redis-slides-4x3.pdf -V aspectratio:43
+	pandoc slides.rst -t beamer -o redis-slides-16x9.pdf -V aspectratio:169
+
+.PHONY: 43
+43:
+	pandoc slides.rst -t beamer -o redis-slides-4x3.pdf -V aspectratio:43
+	open redis-slides-4x3.pdf
+
 .PHONY: clean
 clean:
 	rm -f *.html
 
 .PHONY: help
 help:
-	@echo 'make         same as: make html slides'
-	@echo 'make pdf     create redis-slides-[4x3|16x9].pdf and notes-per-slide.pdf'
+	@echo 'make         same as: make html pdf'
+	@echo 'make pdf     create redis-slides-[4x3|16x9].pdf and other PDF files'
 	@echo 'make html    create HTML files using rst2html'
+	@echo 'make slides  just create redis-slides-[4x3|16x9].pdf'
 	@echo 'make clean   delete HTML files'

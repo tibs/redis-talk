@@ -23,7 +23,6 @@ Source and extended notes at https://github.com/tibs/redis-talk
 .. _pandoc: https://pandoc.org
 .. _beamer: https://github.com/josephwright/beamer
 
-
 ----
 
 Summary of what I'd like to cover (not to be included in final slides)
@@ -145,14 +144,62 @@ from using keys that are too big.
 But the documentation advises not to to too short, as well - try to keep
 meaning in the key.
 
-.. note:: Interestingly, this *does* mean that one can do things like use a
-  JSON datastructure as a key.
-
-----
+Interestingly, this *does* mean that one can do things like use a JSON
+datastructure as a key.
 
 Traditionally, examples of Redis keys are given in the form
 b"<namespace>:<name>" (although they tend to say <server> instead of
 <namespace>).
+
+----
+
+.. code:: python
+
+  >>> r.set(b'my:key', 'value')
+  True                            # OK
+  >>> r.delete(b'my:key')
+  1                               # The key existed
+  >>> r.exists(b'my:key')
+  False                           # It's gone now
+  >>> r.delete(b'no:such:thing')
+  0                               # The key didn't exist
+  >>> r.exists(b'no:such:thing')
+  False                           # It's still gone
+
+----
+
+Other interesting key commands include:
+
+* Various commands to set the TTL for a key
+* ``DUMP``, ``RESTORE`` - dump its value (as a string), and restore therefrom
+* ``KEYS`` - find all keys matching a particular (glob-style) pattern
+* ``MIGRATE`` - migrate from one Redis instance to another
+* ``MOVE`` - move to a different database
+* ``RANDOMKEY`` - return a random key
+* ``RENAME``, ``RENAMENX`` - rename a key, and rename only if the new name doesn't exist
+* ``SCAN`` iterate over keys
+* ``SORT`` - sort (the elements of a list, set or sorted set) and return or store the
+* ``TYPE`` - report what type is stored at a key
+
+----
+
+Commands on keys
+----------------
+
+* ``DEL`` delete one or more keys
+* ``RENAME``, ``RENAMENX`` - rename a key, and rename only if the new name doesn't exist
+* ``DUMP``, ``RESTORE`` - dump its value, serialised, and restore from same
+* ``EXISTS`` - check if one or more keys exist
+* ``KEYS`` - find all keys matching a particular (glob-style) pattern
+* ``TYPE`` - report what type is stored at a key
+* ``PEXPIRE``, etc. - set or get its TTL
+* ``MIGRATE`` - migrate from one Redis instance to another
+* ``MOVE`` - move to a different database
+* ``SORT`` - sort (the elements of a list, set or sorted set) and return or store the
+  result
+* ``SCAN`` iterate over keys
+* ``RANDOMKEY`` - return a random key
+* ``TOUCH`` - change the last access time of a key
 
 ----
 
@@ -308,6 +355,28 @@ Usable as sempahores
 
 ----
 
+Other interesting string value commands include:
+
+* ``APPEND`` - append
+* ``SETRANGE`` - set substring
+* ``GETSET`` - set to new value and return old value
+* ``SETNX`` - set only if the key does not exist
+
+also:
+
+* ``MGET`` - get multiple values (from their keys)
+* ``MSET`` - set multiple key/value pairs at same time
+* ``MSETNX`` - ditto only if none of the keys exist
+
+----
+
+Other interesting string-value-as-number commands include:
+
+* ``INCRBY``, ``DECRBY`` - increment/decrement by other values
+* ``INCRBYFLOAT`` - increment by floating point value
+
+----
+
 String commands
 ---------------
 Include: APPEND, GET, GETRANGE (get substring), GETSET (set to new value,
@@ -402,6 +471,21 @@ Can access the last element with index -1.
 
 ----
 
+Other interesting list value commands include:
+
+* ``LSET``, ``LINDEX`` - set and get by index
+* ``LPUSHX``, ``RPUSHX`` - only push if the list exists
+* ``LLEN`` - get length of list,
+* ``LINSERT`` - insert element before or after a particular value,
+* ``LREM`` - remove N elements with a given value,
+* ``LTRIM`` - trim list to specific range of indices,
+
+and blocking variants:
+
+* ``BLPOP``, ``BRPOP`` - blocking ``POP``
+
+----
+
 List commands: LINDEX (get element by index),
 LINSERT, LLEN, LPOP, LPUSH, LPUSHX (prepend value, only if list exists),
 LRANGE (get range of elements), LREM (remove elements), LSET, LTRIM (trim list
@@ -489,9 +573,16 @@ Again, very like Python sets
 
 ----
 
+Other interesting set value commands:
+
+* ``SCARD`` - get the size of the set
+* ``SISMEMBER`` - is a value a member?
+
+----
+
 Set commands:  SADD, SCARD ("cardinality" = size), SDIFF (subtract sets),
 SDIFFSTORE (SDIFF and store the result), SINTER (intersect sets), SINTERSTORE,
-SISMEMBER,
+SISMEMBER, SUNION, SUNIONSTORE
 
 ----
 
@@ -552,6 +643,25 @@ negative infinity).
   [b'a', b'b']
   >>> r.zrange(b'my:zset', 1, -1, withscores=True)
   [(b'b', 1.0)]
+
+----
+
+Sorted set commands
+-------------------
+
+* ``ZADD`` and so on - equivalent to set commands, but with a score
+ 
+* ``ZADD`` - add a score and value
+
+  * and other equivalents to set commands, but with a score
+
+* ``ZCOUNT`` - count members with a given score
+* ``ZINCBY`` - increment the score of a member
+* ``ZPOPMIN``, ``ZPOPMAX`` - pop the members with lowest/highest scores
+* ``ZRANGE`` - return a range (subset) of members by index
+* ``ZRANGEBYSCORE`` - return a range (subset) of members by score
+
+and all sorts of other operations...
 
 ----
 
@@ -623,6 +733,21 @@ NB: It's possible to increment and decrement hash values.
   [b'k1', b'k2']
   >>> r.hgetall(b'my:dict')
   {b'k1': b'val1', b'k2': b'val2'}
+
+----
+
+Other interesting hash value commands
+
+* ``HSETNX`` - set a hash field's value iff it does not exist
+* ``HDEL`` - delete one or more hash fields
+* ``HEXISTS`` - does a given hash field exist?
+* ``HKEYS`` - get all the hash fields
+* ``HVALS`` - get all the values
+* ``HLEN`` - get the number of fields in a hash
+* ``HMGET``, ``HMSET`` - get or set multiple hash fields at the same time
+* ``HSTRLEN`` - get the length of a hash field's value
+* ``HSCAN`` - iterate over hash fields and their values
+* ``HINCRBY`` - increment a hash field
 
 ----
 
