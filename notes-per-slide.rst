@@ -264,8 +264,8 @@ Other interesting key commands include:
 
 ----
 
-What can can values be?
------------------------
+What can values be?
+-------------------
 
   * binary safe strings (byte strings again)
   * lists
@@ -699,7 +699,7 @@ Unit Testing
 
   .. code:: python
 
-    from fakeredis import FakeRedis
+    from fakeredis import FakeStrictRedis
 
     def test_my_understanding_of_zadd():
         r = FakeStrictRedis(singleton=False)
@@ -764,7 +764,8 @@ Async unit testing - wrap FakeRedis
 
   .. code:: python
 
-      from fakeredis import FakeRedis
+      from fakeredis import FakeStrictRedis
+      from aioredis.util import _NOTSET
 
       class JustEnoughAsyncRedis:
 
@@ -814,6 +815,42 @@ decorator, to make our test asynchronous, and the ``event_loop``, which is
 an asyncio event loop just for this test.
 
 .. _pytest-asyncio: https://github.com/pytest-dev/pytest-asyncio
+
+----
+
+Other cool things
+-----------------
+
+  * Redis server is single-threaded, which makes atomicity feasible
+  * Pub/sub (broadcast) messaging
+  * Transactions
+  * Programmable in Lua
+  * Comamnd protocol is documented
+  * Geospatial values
+  * Streams
+
+* Redis server is single-threaded, which makes atomicity feasible
+* Pub/sub (broadcast) messaging
+* Transactions
+* Programmable in Lua
+
+  And the documentation for this doesn't assume you know Lua, which is nice.
+
+* Comamnd protocol is documented
+
+  So, for instance, you can do bulk uploading by creating your own command
+  stream and piping it through redis-cli.
+
+* Geospatial values
+
+  I've not used them, but they look cool.
+
+* Streams
+
+  New in Redis 5.0. "models a log data structure in a more abstract way".
+
+  Producer adds entries to a stream, and consumer can query it in various
+  useful ways. Appears to be primarily aimed at logging management.
 
 ----
 

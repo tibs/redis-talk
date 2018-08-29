@@ -119,8 +119,8 @@ Keys: example
 
 ----
 
-What can can values be?
------------------------
+What can values be?
+-------------------
 
 * binary safe strings (byte strings again)
 * lists
@@ -396,7 +396,7 @@ Unit Testing
 
 .. code:: python
 
-  from fakeredis import FakeRedis
+  from fakeredis import FakeStrictRedis
 
   def test_my_understanding_of_zadd():
       r = FakeStrictRedis(singleton=False)
@@ -448,11 +448,12 @@ Async unit testing - wrap FakeRedis
 
 .. code:: python
 
-    from fakeredis import FakeRedis
+    from fakeredis import FakeStrictRedis
+    from aioredis.util import _NOTSET
 
     class JustEnoughAsyncRedis:
 
-        def __init__(self, fake_redis=None, singleton=False):
+        def __init__(self):
             self.redis = FakeStrictRedis(singleton=False)
 
         async def brpoplpush(self, sourcekey, destkey,
@@ -469,7 +470,7 @@ The asyncio version of our earlier test is very similar
 .. code:: python
 
   @pytest.mark.asyncio
-  def test_my_understanding_of_zadd(event_loop):
+  async def test_my_understanding_of_zadd(event_loop):
       ar = JustEnoughAsyncRedis()
 
       now_timestamp = datetime(2018, 4, 23, 0, 0, 0).now()
@@ -479,6 +480,19 @@ The asyncio version of our earlier test is very similar
       assert await ar.zrange(b'timeout',
                              0, -1, withscores=True) \
           == [(b'text', now_timestamp)]
+
+----
+
+Other cool things
+-----------------
+
+* Redis server is single-threaded, which makes atomicity feasible
+* Pub/sub (broadcast) messaging
+* Transactions
+* Programmable in Lua
+* Comamnd protocol is documented
+* Geospatial values
+* Streams
 
 ----
 
