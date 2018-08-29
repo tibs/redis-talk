@@ -15,7 +15,7 @@ say, or show gaps in my knowledge, people can hear the talk and then tell me
 new things and I'll learn more. So it's win-win.
 
 Why?
-===
+====
 Persistences. This comes up every so often - I want a way to persist Python
 data that is very easy (no encoding/decoding), and perhaps isn't either local
 or simple files. This is of course a special case of *sharing data between
