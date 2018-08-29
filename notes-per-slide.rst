@@ -25,8 +25,8 @@ Source and extended notes at https://github.com/tibs/redis-talk
 
 ----
 
-Summary of what I'd like to cover (not to be included in final slides)
-----------------------------------------------------------------------
+Summary of what I'd like to cover (from my proposal)
+----------------------------------------------------
 
 Broadly: what Redis is, and why it might be useful; the fact it has clients in
 many programming languages, and a rather good CLI tool; what datatypes it
@@ -797,7 +797,7 @@ and (a) it's really not much work, and (b) it's very simple
   .. code:: python
 
     @pytest.mark.asyncio
-    def test_my_understanding_of_zadd(event_loop):
+    async def test_my_understanding_of_zadd(event_loop):
         ar = JustEnoughAsyncRedis()
 
         now_timestamp = datetime(2018, 4, 23, 0, 0, 0).now()
