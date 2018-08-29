@@ -8,8 +8,9 @@ This is a slideshow originally produced for `PyCon UK 2018`_
 History
 ~~~~~~~
 * Not yet presented.
-* A preliminary version will be given at the `September 2018`_ CamPUG_ meeting.
-* And probably at work as well.
+* A practice version will be given at the `September 2018`_ CamPUG_ meeting.
+* I gave a preliminary version to my colleagues at work, which produced some
+  useful comments.
 
 The files
 ~~~~~~~~~
