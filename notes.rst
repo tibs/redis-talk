@@ -4,9 +4,7 @@ Notes for a talk on Redis
 
 .. note:: Talk accepted for PyConUK 2018, to be 25 minutes.
 
-I've said I want to mention async support for using Redis at the end, but
-should I just say "well, it's easy enough, so I'm just going to be async all
-the way through"? I think not, but bear it in mind.
+These are notes to myself, and I'm leaving them here because, well, why not.
 
 This talk
 =========

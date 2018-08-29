@@ -829,6 +829,8 @@ Other cool things
   * Geospatial values
   * Streams
 
+*This slide is optional. Only use it if there's time!*
+
 * Redis server is single-threaded, which makes atomicity feasible
 * Pub/sub (broadcast) messaging
 * Transactions
