@@ -167,7 +167,7 @@ String values as numbers
   >>> r.get(b'my:number')
   b'2'
 
-So that gives us counters, and also sempahores.
+So that gives us counters, and also semaphores.
 
 ----
 
@@ -490,7 +490,7 @@ Other cool things
 * Pub/sub (broadcast) messaging
 * Transactions
 * Programmable in Lua
-* Comamnd protocol is documented
+* Command protocol is documented
 * Geospatial values
 * Streams
 

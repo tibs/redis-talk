@@ -342,7 +342,7 @@ String values as numbers
     >>> r.get(b'my:number')
     b'2'
 
-  So that gives us counters, and also sempahores.
+  So that gives us counters, and also semaphores.
 
 That's atomic increment and decrement.
 
@@ -825,7 +825,7 @@ Other cool things
   * Pub/sub (broadcast) messaging
   * Transactions
   * Programmable in Lua
-  * Comamnd protocol is documented
+  * Command protocol is documented
   * Geospatial values
   * Streams
 
@@ -838,7 +838,7 @@ Other cool things
 
   And the documentation for this doesn't assume you know Lua, which is nice.
 
-* Comamnd protocol is documented
+* Command protocol is documented
 
   So, for instance, you can do bulk uploading by creating your own command
   stream and piping it through redis-cli.
