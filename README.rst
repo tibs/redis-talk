@@ -7,7 +7,7 @@ This is a talk originally produced for `PyCon UK 2018`_
 
 History
 ~~~~~~~
-* The talk was given at `PyCon UK 2018`_, and there is a video if it at
+* The talk was given at `PyCon UK 2018`_, and there is a video of it at
   https://www.youtube.com/watch?v=39zPLAlKB3U
 * A practice version was given at the `September 2018`_ CamPUG_ meeting.
 * I gave a preliminary version to my colleagues at work, which produced some
