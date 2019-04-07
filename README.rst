@@ -3,7 +3,7 @@ Redis: persistent collections as a service (and for fun)
 
 A quick introduction to Redis, and why I really like it
 
-This is a slideshow originally produced for `PyCon UK 2018`_
+This is a talk originally produced for `PyCon UK 2018`_
 
 History
 ~~~~~~~
