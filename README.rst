@@ -7,8 +7,9 @@ This is a slideshow originally produced for `PyCon UK 2018`_
 
 History
 ~~~~~~~
-* Not yet presented.
-* A practice version will be given at the `September 2018`_ CamPUG_ meeting.
+* The talk was given at `PyCon UK 2018`_, and there is a video if it at
+  https://www.youtube.com/watch?v=39zPLAlKB3U
+* A practice version was given at the `September 2018`_ CamPUG_ meeting.
 * I gave a preliminary version to my colleagues at work, which produced some
   useful comments.
 
@@ -34,12 +35,6 @@ timestamps.
 * The 4x3 aspect ratio slides are `<redis-slides-4x3.pdf>`_.
 * The 16x9 aspect ratio slides are `<redis-slides-16x9.pdf>`_.
 * There is a PDF version of the notes per slide in `<notes-per-slide.pdf>`_.
-
-.. At the moment, I'm not splitting the notes-per-slide onto individual pages,
-.. so comment out the following:
-.. 
-..  Beware that it is set with the information for each slide on a separate (A4)
-..  page.
 
 Making the PDF and HTML files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
