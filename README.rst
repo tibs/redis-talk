@@ -20,7 +20,6 @@ plain text.
 
 * The sources for the slides are in `<redis-slides.rst>`_.
 * Notes per slide (for the presenter) are separated out into `<notes-per-slide.rst>`_.
-* Extended notes (with links) are in `<markup-history-extended-notes.rst>`_.
 
 (Note that github will present the ``.rst`` files in rendered form as HTML,
 albeit using their own styling (which makes notes a bit odd). If you want
